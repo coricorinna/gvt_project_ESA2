@@ -11,7 +11,7 @@ let vs = gl.createShader(gl.VERTEX_SHADER);
 gl.shaderSource(vs, vsSource);
 gl.compileShader(vs);
 
-fsSouce =  'void main() { gl_FragColor = vec4(0,0,0,1); }'; //Farbe der Linie
+fsSouce =  'void main() { gl_FragColor = vec4(50, 0.51, 0.80, 1); }'; //Farbe der Linie
 let fs = gl.createShader(gl.FRAGMENT_SHADER);
 gl.shaderSource(fs, fsSouce);
 gl.compileShader(fs);
