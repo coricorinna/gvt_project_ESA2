@@ -30,7 +30,7 @@ let vertices = new Float32Array([
     7, 1.5,
     7,-1,
     0,-1,
-    0,0, // Quadrate
+    0,0, // Quadrate Start
     0,0,
     0,3,
     3,3,
@@ -50,7 +50,7 @@ let vertices = new Float32Array([
     2,2,
     2,7,
     7,7,
-    7,2,
+    7,2, // Quadrate Ende
 ]);
 
 let vbo = gl.createBuffer();
@@ -63,4 +63,4 @@ gl.vertexAttribPointer(posAttrib, 2, gl.FLOAT, false, 0, 0);
 gl.enableVertexAttribArray(posAttrib);
 
 gl.clear(gl.COLOR_BUFFER_BIT);
-gl.drawArrays(gl.LINE_STRIP, 0, 30);
+gl.drawArrays(gl.LINE_STRIP, 0, 28);
