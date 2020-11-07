@@ -104,7 +104,6 @@ const indices = new Uint16Array([
  const posAttrib = gl.getAttribLocation(prog, 'pos');
  gl.vertexAttribPointer(posAttrib, 3, gl.FLOAT, false, 0, 0);
  gl.enableVertexAttribArray(posAttrib);
-
  
  const vboCol = gl.createBuffer();
  gl.bindBuffer(gl.ARRAY_BUFFER, vboCol);
