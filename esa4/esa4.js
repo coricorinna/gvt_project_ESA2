@@ -45,6 +45,7 @@
     gl.linkProgram(prog);
     gl.useProgram(prog);
 
+    // Start ESA4
     // Vertex data pillow
     // Positions, Index data
     let verticesPillow, colorsPillow, indicesLinesPillow, indicesTrisPillow;
@@ -83,20 +84,18 @@
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
     // Clear framebuffer and render primitives
-    gl.clear(gl.COLOR_BUFFER_BIT);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // Bind vertex buffer to attribute variable.
     const colAttribPillow = gl.getAttribLocation(prog, 'col');
 
-    //START ESA4
     // Setup rendering tris
-    gl.vertexAttrib4f(colAttribPillow, 0, 0, 0.3, 1);
+    gl.vertexAttrib4f(colAttribPillow, 0, 0.1, 0.5, 1); //background color
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iboTrisPillow);
     gl.drawElements(gl.TRIANGLES, iboTrisPillow.numberOfElements, gl.UNSIGNED_SHORT, 0);
 
     // Setup rendering lines
-    gl.vertexAttrib4f(colAttribPillow, 0, 0.8, 0.7, 1);
+    gl.vertexAttrib4f(colAttribPillow, 0, 0.8, 0.7, 1); // lines color
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iboLinesPillow);
     gl.drawElements(gl.LINES, iboLinesPillow.numberOfElements, gl.UNSIGNED_SHORT, 0);
 
@@ -199,12 +198,12 @@
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
     // Setup rendering tris
-    gl.vertexAttrib4f(colAttrib, 0, 0, 0, 1);
+    gl.vertexAttrib4f(colAttrib, 0.5, 0, 0, 1); // background color
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iboTris);
     gl.drawElements(gl.TRIANGLES, iboTris.numberOfElements, gl.UNSIGNED_SHORT, 0);
 
     // Setup rendering lines
-    gl.vertexAttrib4f(colAttrib, 1, 0, 1, 1);
+    gl.vertexAttrib4f(colAttrib, 1, 0, 1, 1); //lines color
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iboLines);
     gl.drawElements(gl.LINES, iboLines.numberOfElements, gl.UNSIGNED_SHORT, 0);
 
@@ -269,4 +268,6 @@
                 }
             }
         }
+        
     }
+    
