@@ -1,4 +1,4 @@
-var app = ( function() {
+var app = (function () {
 
 	var gl;
 
@@ -11,35 +11,38 @@ var app = ( function() {
 
 	var camera = {
 		// Initial position of the camera.
-		eye : [0, 1, 4],
+		eye: [0, 1, 4],
 		// Point to look at.
-		center : [0, 0, 0],
+		center: [0, 0, 0],
 		// Roll and pitch of the camera.
-		up : [0, 1, 0],
+		up: [0, 1, 0],
 		// Opening angle given in radian.
 		// radian = degree*2*PI/360.
-		fovy : 60.0 * Math.PI / 180,
+		fovy: 60.0 * Math.PI / 180,
 		// Camera near plane dimensions:
 		// value for left right top bottom in projection.
-		lrtb : 2.0,
+		lrtb: 2.0,
 		// View matrix.
-		vMatrix : mat4.create(),
+		vMatrix: mat4.create(),
 		// Projection matrix.
-		pMatrix : mat4.create(),
-
+		pMatrix: mat4.create(),
 		// Projection types: ortho, perspective, frustum.
-		//projectionType : "ortho",
-
-		// Projection types: ortho, perspective, frustum.
-        projectionType : "perspective",
+		projectionType: "perspective",
 		// Angle to Z-Axis for camera when orbiting the center
 		// given in radian.
-		zAngle : 0,
+		
+		yAngle: 0.5,
+		xAngle: 0.0,
+		zAngle: 0,
 		// Distance in XZ-Plane from center when orbiting.
-		distance : 4,
+		distance: 4,
+
+		//aspect ratio
+		aspect: 1
 	};
 
 	function start() {
+		models = []
 		init();
 		render();
 	}
@@ -115,8 +118,8 @@ var app = ( function() {
 		var shaderSource = document.getElementById(SourceTagId).text;
 		gl.shaderSource(shader, shaderSource);
 		gl.compileShader(shader);
-		if(!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-			console.log(SourceTagId+": "+gl.getShaderInfoLog(shader));
+		if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+			console.log(SourceTagId + ": " + gl.getShaderInfoLog(shader));
 			return null;
 		}
 		return shader;
@@ -133,8 +136,11 @@ var app = ( function() {
 	function initModels() {
 		// fill-style
 		var fs = "fillwireframe";
+		var wire = "wireframe"
 		createModel("torus", fs);
-		createModel("plane", "wireframe");
+		createModel("horn", fs);
+		createModel("sphere", fs);
+		createModel("plane", wire);
 	}
 
 	/**
@@ -143,7 +149,7 @@ var app = ( function() {
 	 * @parameter geometryname: string with name of geometry.
 	 * @parameter fillstyle: wireframe, fill, fillwireframe.
 	 */
- function createModel(geometryname, fillstyle) {
+	function createModel(geometryname, fillstyle) {
 		var model = {};
 		model.fillstyle = fillstyle;
 		initDataAndBuffers(model, geometryname);
@@ -200,61 +206,75 @@ var app = ( function() {
 	}
 
 	function initEventHandler() {
-		// Rotation step.
-		var deltaRotate = Math.PI / 36;
-		var deltaTranslate = 0.05;
+		// var invertRotation = 1
+		var threshhold = 1.0
+		window.onkeydown = function (evt) {
+			// console.log('');
 
-		window.onkeydown = function(evt) {
 			var key = evt.which ? evt.which : evt.keyCode;
+			var sign = evt.shiftKey ? -1 : 1;
 			var c = String.fromCharCode(key);
-			// Use shift key to change sign.
-            var sign = evt.shiftKey ? -1 : 1;
+			// console.log(evt);
+			
+			// Change projection of scene.
+			switch (c) {
+				case ('O'):
+					console.log('triggered Ortho');
 
-			// Camera move and orbit.
-            switch(c) {
-                case('D'):
-                    // Orbit camera.
-                    camera.zAngle += sign * deltaRotate;
+					camera.projectionType = "ortho";
+					camera.lrtb = 2;
 					break;
+
+				case ('P'):
+					console.log('triggered perspective mode');
+					camera.projectionType = "perspective";
+					break;
+				case ('F'):
+					console.log('triggered frustuffm mode');
+					camera.lrtb = 0.6
+					camera.projectionType = "frustum";
+					break;
+
+					//Steering Key
 				case ('A'):
-						camera.zAngle -= sign * deltaRotate;
-						break;
-				case ('W'):
-					camera.xAngle  += sign * deltaRotate;
+					camera.xAngle -= 1 * Math.PI / 36;
 					break;
-				
+					case ('D'):
+					camera.xAngle += 1 * Math.PI / 36;
+					break;
+					case ('W'):
+						if(camera.yAngle + 1 * Math.PI / 36 < Math.PI/2){
+							camera.yAngle += 1 * Math.PI / 36;
+						}
+					break;
+					case ('S'):
+						if(camera.yAngle - 1 * Math.PI / 36 > - Math.PI/2){
+							camera.yAngle -= 1 * Math.PI / 36;
+						}
+					break;
+
+					case ('U'):
+							camera.lrtb += 0.05 / threshhold
+							camera.fovy += 0.05 / threshhold
+							threshhold = threshhold/1.07
+							console.log(threshhold);
+					// camera.distance += 1/10;
+					break;
+					case ('Z'):
+							camera.lrtb -= 0.05 / threshhold
+							camera.fovy -= 0.05 / threshhold
+							threshhold = threshhold*1.07
+							console.log(threshhold);
+					// camera.distance -= 1/10;
+					break;
 					
-				case('F'):
-                    camera.projectionType = "frustum";
-                    camera.lrtb = 1.2;
-                    break;
-                case('P'):
-                    camera.projectionType = "perspective";
-					break;
 					
-				case('H'):
-                    // Move camera up and down.
-                    camera.eye[1] += sign * deltaTranslate;
-                    break;
-                case('D'):
-                    // Camera distance to center.
-                    camera.distance += sign * deltaTranslate;
-					break;
-				case('V'):
-                    // Camera fovy in radian.
-                    camera.fovy += sign * 5 * Math.PI / 180;
-                    break;
-                case('B'):
-                    // Camera near plane dimensions.
-                    camera.lrtb += sign * 0.1;
-                    break;
 			}
 
 			// Render the scene again on any key pressed.
 			render();
 		};
 	}
-
 
 	/**
 	 * Run the rendering pipeline.
@@ -265,68 +285,58 @@ var app = ( function() {
 
 		setProjection();
 
-		//mat4.identity(camera.vMatrix);
-        //mat4.rotate(camera.vMatrix, camera.vMatrix, 
-			//Math.PI*1/4 ,[1, 0, 0]);
-			calculateCameraOrbit();
+		// mat4.identity(camera.vMatrix);
 
-			// Set view matrix depending on camera.
-			mat4.lookAt(camera.vMatrix, camera.eye, camera.center, camera.up);
+		calculateCameraOrbit();
+		mat4.lookAt(camera.vMatrix, camera.eye, camera.center, camera.up)
+		// mat4.rotate(camera.vMatrix, camera.vMatrix, Math.PI*1/4 ,[1, 0, 0]);
+
 
 		// Loop over models.
-		for(var i = 0; i < models.length; i++) {
+		for (var i = 0; i < models.length; i++) {
 			// Update modelview for model.
 			mat4.copy(models[i].mvMatrix, camera.vMatrix);
 
 			// Set uniforms for model.
 			gl.uniformMatrix4fv(prog.mvMatrixUniform, false,
 				models[i].mvMatrix);
-			
+
 			draw(models[i]);
 		}
 	}
 
 	function setProjection() {
 		// Set projection Matrix.
-		switch(camera.projectionType) {
-			case("ortho"):
+		switch (camera.projectionType) {
+			case ("ortho"):
 				var v = camera.lrtb;
 				mat4.ortho(camera.pMatrix, -v, v, -v, v, -10, 10);
 				break;
-			case("frustum"):
-                var v = camera.lrtb;
-                mat4.frustum(camera.pMatrix, -v/2, v/2, -v/2, v/2, 1, 10);
-                break;
-            case("perspective"):
-                mat4.perspective(camera.pMatrix, camera.fovy, 
-                    camera.aspect, 1, 10);
-                break;
+			case ("perspective"):
+				var v = camera.lrtb;
+				mat4.perspective(camera.pMatrix, camera.fovy, camera.aspect, 0.1, 10);
+				break;
+			case ("frustum"):
+				var v = camera.lrtb;
+				mat4.frustum(camera.pMatrix, -v, v, -v, v, 1, 10);
+				break;
 		}
 		// Set projection uniform.
 		gl.uniformMatrix4fv(prog.pMatrixUniform, false, camera.pMatrix);
 	}
 
-	function calculateCameraOrbit() {
-        // Calculate x,z position/eye of camera orbiting the center.
-        var x = 0, z = 2;
-        camera.eye[x] = camera.center[x];
-        camera.eye[z] = camera.center[z];
-        camera.eye[x] += camera.distance * Math.sin(camera.zAngle);
-        camera.eye[z] += camera.distance * Math.cos(camera.zAngle);
-    }
-
 	function draw(model) {
 		// Setup position VBO.
 		gl.bindBuffer(gl.ARRAY_BUFFER, model.vboPos);
-		gl.vertexAttribPointer(prog.positionAttrib,3,gl.FLOAT,false,0,0);
+		gl.vertexAttribPointer(prog.positionAttrib, 3, gl.FLOAT, false, 0, 0);
 
 		// Setup normal VBO.
 		gl.bindBuffer(gl.ARRAY_BUFFER, model.vboNormal);
-		gl.vertexAttribPointer(prog.normalAttrib,3,gl.FLOAT,false,0,0);
+		gl.vertexAttribPointer(prog.normalAttrib, 3, gl.FLOAT, false, 0, 0);
 
 		// Setup rendering tris.
 		var fill = (model.fillstyle.search(/fill/) != -1);
-		if(fill) {
+		if (fill) {
 			gl.enableVertexAttribArray(prog.normalAttrib);
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, model.iboTris);
 			gl.drawElements(gl.TRIANGLES, model.iboTris.numberOfElements,
@@ -335,7 +345,7 @@ var app = ( function() {
 
 		// Setup rendering lines.
 		var wireframe = (model.fillstyle.search(/wireframe/) != -1);
-		if(wireframe) {
+		if (wireframe) {
 			gl.disableVertexAttribArray(prog.normalAttrib);
 			gl.vertexAttrib3f(prog.normalAttrib, 0, 0, 0);
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, model.iboLines);
@@ -344,9 +354,23 @@ var app = ( function() {
 		}
 	}
 
+	function calculateCameraOrbit() {
+
+		// X
+		var x = 0, y = 1, z= 2
+		camera.eye[x] = camera.center[x]
+		camera.eye[y] = camera.center[y]
+		camera.eye[z] = camera.center[z]
+
+		camera.eye[x] += camera.distance * Math.sin(camera.xAngle) * Math.cos(camera.yAngle)
+		camera.eye[y] += camera.distance * Math.sin(camera.yAngle)
+		camera.eye[z] += camera.distance * Math.cos(camera.xAngle) * Math.cos(camera.yAngle)
+		
+	}
+
 	// App interface.
 	return {
-		start : start
+		start: start
 	}
 
 }());
