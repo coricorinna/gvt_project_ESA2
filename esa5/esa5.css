@@ -19,10 +19,16 @@ header {
     margin-bottom: 1em;
     padding-top: 1em;
     padding-bottom: 1em;
-    background-color: rgb(28, 29, 29);
+    background-color: rgb(29, 28, 29);
 }
 
 div {
+    font-size: 25px;
+    text-align: center;
+    color:  rgb(28, 29, 29);
+}
+
+p {
     font-size: 25px;
     text-align: center;
     color:  rgb(28, 29, 29);

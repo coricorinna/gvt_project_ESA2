@@ -134,6 +134,7 @@ var app = ( function() {
 		// fill-style
 		var fs = "fillwireframe";
 		createModel("torus", fs);
+		createModel("kelch", fs);
 		createModel("plane", "wireframe");
 	}
 
@@ -216,37 +217,29 @@ var app = ( function() {
                     // Orbit camera.
                     camera.zAngle += sign * deltaRotate;
 					break;
-				case ('A'):
+				case('A'):
 						camera.zAngle -= sign * deltaRotate;
 						break;
-				case ('W'):
-					camera.xAngle  += sign * deltaRotate;
-					break;
-				
-					
-				case('F'):
-                    camera.projectionType = "frustum";
-                    camera.lrtb = 1.2;
-                    break;
-                case('P'):
-                    camera.projectionType = "perspective";
-					break;
-					
-				case('H'):
-                    // Move camera up and down.
-                    camera.eye[1] += sign * deltaTranslate;
-                    break;
-                case('D'):
-                    // Camera distance to center.
-                    camera.distance += sign * deltaTranslate;
-					break;
+				case('W'):
+					 // Move camera up.
+					 camera.eye[1] += sign * deltaTranslate;
+					 break;
+				case('S'):
+					 // Move camera down.
+					 camera.eye[1] -= sign * deltaTranslate;
+					 break;
+				case('U'):
+					 // Camera distance to center.
+					 camera.distance += sign * deltaTranslate;
+					 break;
+				 case('Z'):
+					 // Camera distance to center.
+					 camera.distance -= sign * deltaTranslate;
+					 break;
+
 				case('V'):
                     // Camera fovy in radian.
                     camera.fovy += sign * 5 * Math.PI / 180;
-                    break;
-                case('B'):
-                    // Camera near plane dimensions.
-                    camera.lrtb += sign * 0.1;
                     break;
 			}
 
