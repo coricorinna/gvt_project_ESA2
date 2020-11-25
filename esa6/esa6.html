@@ -1,0 +1,52 @@
+<!DOCTYPE html5>
+<html>
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <link rel="stylesheet" href="esa6.css"/>
+		<script src="esa6.js" type="text/javascript" defer></script>
+        <script src="ext/gl-matrix.js"></script>
+		<script src="GVT_Src_vertexData_torus.js"></script>
+		<script src="GVT_Src_vertexData_plane.js"></script>
+		<script src="GVT_Src_vertexData_sphere.js"></script>
+		<script type="x-shader/x-vertex" id="vertexshader">
+			attribute vec3 aPosition;
+			attribute vec3 aNormal;
+
+			uniform mat4 uPMatrix;
+			uniform mat4 uMVMatrix;
+
+			varying vec4 vColor;
+
+			void main(){
+				gl_Position = uPMatrix * uMVMatrix * vec4(aPosition, 1.0);
+	
+				vColor = vec4(aNormal.x, aNormal.y, aNormal.z, 1.0);
+				vColor = (vColor + 1.0) / 2.0;
+			}
+		</script>
+		<script type="x-shader/x-fragment" id="fragmentshader">
+			precision mediump float;
+			varying vec4 vColor;
+
+			void main() {
+				gl_FragColor = vColor;
+			}
+		</script>
+        <title>Einsendeaufgabe 6</title>
+    </head>
+    <body onload="app.start()">
+        <header>
+            Einsendeaufgabe 6
+        </header>
+        <main>
+            <canvas id="canvas" width="700" height="700"></canvas>
+        </br>
+			<p>
+			<b>W, A, S, D:</b> Kamerawinkel <br>
+			<b>Z, U:</b> Zoom <br>
+			<b>K:</b> Interaktion <br>
+		</p>
+        </main>
+    </body>
+</html>
