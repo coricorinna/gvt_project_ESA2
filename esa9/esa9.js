@@ -358,6 +358,23 @@ var app = (function () {
             var sign = evt.shiftKey ? -1 : 1;
 
             switch (c) {
+                case('W'):
+				case('&'):
+					camera.yAngle += deltaRotate;
+					break;
+				case('A'):
+				case('%'):
+					camera.xAngle -= deltaRotate;
+					break;
+				case('S'):
+				case('('):
+					camera.yAngle -= deltaRotate;
+					break;
+				case('D'):
+				case('\''):
+					camera.xAngle += deltaRotate;
+                    break;
+                    
                 // Scale/squeese interactiveModel.
                 case ('S'):
                     interactiveModel.scale[0] *= 1 + sign * deltaScale;
@@ -398,7 +415,7 @@ var app = (function () {
                     // Move camera up and down.
                     camera.eye[1] += sign * deltaTranslate;
                     break;
-                case ('D'):
+                case (''):
                     // Camera distance to center.
                     camera.distance += sign * deltaTranslate;
                     break;
