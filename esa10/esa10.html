@@ -8,9 +8,8 @@
 		<script src="ext/gl-matrix.js"></script>
 		<script src="ext/papaparse.min.js"></script>
 		<script src="ext/tsne.js"></script>
-		<script src="ea10_vertexData_sphere.js"></script>
-		<script src="ea10_Data.js"></script>
-
+		<script src="esa10_vertexData_sphere.js"></script>
+		<script src="esa10_Data.js"></script>
 		<script type="x-shader/x-vertex" id="vertexshader">
 			attribute vec3 aPosition;
 			attribute vec3 aNormal;
@@ -73,11 +72,21 @@
             Einsendeaufgabe 10
         </header>
         <main>
-            <canvas id="canvas" width="700" height="700"></canvas>
+			<canvas id="canvas" width="700" height="700"></canvas>
+			<div>
+			<span>
+				<a href=".?ea10=Run1" target="_self">EA10 (default)</a>
+			</span>
+			<span>
+				<a href=".?ea10=Run2" target="_self">EA10 Run2</a>
+			</span>
         </br>
 			<p>
 			<b>X, Y, Z</b> zum Rotieren <br>
 		</p>
+		<span id="para" style="display: inline-block; width: calc(27% - 1px); text-align: center;"></span>
+		<span id="step" style="display: inline-block; width: calc(9% - 1px); text-align: center;"></span>
+	</div>
         </main>
     </body>
 </html>
