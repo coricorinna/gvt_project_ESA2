@@ -1,0 +1,78 @@
+body, html{
+    margin:0;
+    padding:0;
+}
+
+main {
+    margin-top: 20%;
+    margin: auto;
+    width: 80%;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 18px;
+    color: rgb(63, 64, 65);
+}
+
+#instructions {
+    margin-top: 5em;
+    text-align: center;
+}
+
+header {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 35px;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 1em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    background-color: rgb(212, 212, 212);
+}
+
+#watermelon {
+    width: 27%;
+    height: 27%;
+    float: left;
+    margin-top: 3em;
+    margin-left: 5em;
+}
+
+.box:hover
+{
+    margin-top: 3em;
+    margin-bottom: 2em;
+    margin-left: 2em;
+    width: calc(1591px / 4);
+    height: 300px;
+    background: url(images/cat.png);
+    animation: animate 1s steps(4) infinite;
+}
+@keyframes animate{
+    from{
+        background-position: 0;
+    }
+    to{
+        background-position: -1591px;
+    }
+}
+
+.box
+{
+    margin-top: 3em;
+    margin-bottom: 2em;
+    margin-left: 2em;
+    width: calc(1591px / 4);
+    height: 300px;
+    background: url(images/cat.png);
+
+}
+
+#images {
+    display: flex;
+    justify-content: space-around;
+    float:left;
+}
+
+footer {
+    margin-top: 5em;
+    text-align: center;
+}
